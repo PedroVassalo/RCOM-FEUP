@@ -34,6 +34,7 @@ volatile int alarmEnabled = FALSE;
 volatile int alarmCount = 0;
 volatile int retransmissions = 0;
 
+//Imprime os bytes do buffer no formato hexadecimal
 void memdump(void *addr, size_t bytes) {
     for (size_t i = 0; i < bytes; ++i)
         printf("%02x ", *((char*) addr + i));
@@ -45,6 +46,7 @@ void alarmHandler(int signal) {
     alarmCount++;
     printf("Alarm #%d\n", alarmCount);
 
+    // Se o número de retransmissões não ultrapassou MAX_RETRANSMISSIONS(3), retransmite o SET frame
     if (retransmissions < MAX_RETRANSMISSIONS) {
         printf("Retransmitting SET frame...\n");
         alarm(TIMEOUT);  // Restart the alarm
@@ -87,8 +89,8 @@ int main(int argc, char *argv[]) {
 
     // Set input mode (non-canonical, no echo,...)
     newtio.c_lflag = 0;
-    newtio.c_cc[VTIME] = 0; // Inter-character timer unused
-    newtio.c_cc[VMIN] = 5;  // Blocking read until 5 chars received
+    newtio.c_cc[VTIME] = 0;
+    newtio.c_cc[VMIN] = 5;  // read() só retorna após receber 5 bytes
 
     // Flush any unwanted data
     tcflush(fd, TCIOFLUSH);
