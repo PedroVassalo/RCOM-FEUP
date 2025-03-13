@@ -14,6 +14,9 @@
 #define BAUDRATE B38400
 #define _POSIX_SOURCE 1
 
+#define FALSE 0
+#define TRUE 1
+
 #define FLAG 0x7E
 #define ADRESS_SENDER 0x03
 #define ADRESS_RECEIVER 0x01
